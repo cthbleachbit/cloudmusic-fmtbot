@@ -27,6 +27,7 @@ def link_handler_routine(bot, update):
 	# Start by looking for netease sharing addr
 	NMsong = re.findall(r'(http://music.163.com/song/\d+)', update.message.text)[0]
 	print("Parsed: " + NMsong)
+	bot.send_chat_action(chat_id=chat_id, action=u"解析中")
 	try:
 		response = urlopen(NMsong);
 	except urllib.error.URLError as e:
