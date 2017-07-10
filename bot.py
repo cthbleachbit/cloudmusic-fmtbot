@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from urllib.request import urlopen
 from datetime import datetime
 
-from telegram import ParseMode, Message, Chat, MessageEntity
+from telegram import ParseMode, Message, Chat, ChatAction, MessageEntity
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram.ext.dispatcher import run_async
 
@@ -27,7 +27,7 @@ def link_handler_routine(bot, update):
 	# Start by looking for netease sharing addr
 	NMsong = re.findall(r'(http://music.163.com/song/\d+)', update.message.text)[0]
 	print("Parsed: " + NMsong)
-	bot.send_chat_action(chat_id=chat_id, action=u"解析中")
+	bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 	try:
 		response = urlopen(NMsong);
 	except urllib.error.URLError as e:
@@ -38,8 +38,9 @@ def link_handler_routine(bot, update):
 	NMsubtitle = extract_info(NMhtml, "subtitle")
 	NMalbum = extract_info(NMhtml, "album")
 	NMartist = extract_info(NMhtml, "artist")
-	query=NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist
-	send_async(bot, chat_id, text = query)
+	NMdetails=NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist
+	print("Done: " + NMdetails)
+	send_async(bot, chat_id, text = NMdetails)
 	
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
 
