@@ -37,29 +37,39 @@ def link_handler_routine(bot, update):
 	bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 	try:
 		response = urlopen("http://music.163.com/song/" + NMsong);
+		NMhtml = bytes(response.read()).decode("utf-8")
 	except urllib.error.URLError as e:
 		send_async(bot, chat_id, text = u"无法连接到网易云")
 		error(bot, update, e.reason)
 		return
-	NMhtml = bytes(response.read()).decode("utf-8")
 	# Downloaded from server, start extracting....
 	# Text info
-	NMtitle = extract_info(NMhtml, "title")
-	NMsubtitle = extract_info(NMhtml, "subtitle")
-	NMalbum = extract_info(NMhtml, "album")
-	NMartist = extract_info(NMhtml, "artist")
-	NMdetails = NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist
-	print("Done: " + NMdetails)
+	try:
+		NMtitle = extract_info(NMhtml, "title")
+		NMsubtitle = extract_info(NMhtml, "subtitle")
+		NMalbum = extract_info(NMhtml, "album")
+		NMartist = extract_info(NMhtml, "artist")
+		NMdetails = NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist + "\n\nhttp://music.163.com/song/" + NMsong
+		print("Done: " + NMdetails)
+	except Exception as e:
+		error(bot, update, e.reason)
+		send_async(bot, chat_id, e.reason)
+		return
 	# Album art
-	NMalbumarturl = extract_albumarturl(NMhtml)
+	try:
+		NMalbumarturl = extract_albumarturl(NMhtml)
+	except Exception as e:
+		error(bot, update, u"无头音乐？")
+		send_async(bot, chat_id, text = NMdetails)
+		return
 	print("Downloading album art : " + NMalbumarturl)
 	try:
 		response = urlopen(NMalbumarturl)
+		imgbuffer = BytesIO(response.read())
 	except urllib.error.URLError as e:
 		send_async(bot, chat_id, text = u"无法连接到网易云")
 		error(bot, update, e.reason)
 		return
-	imgbuffer = BytesIO(response.read())
 	imgbuffer.name = "cover.png"
 	imgbuffer.seek(0)
 	send_photo_async(bot, chat_id, photo = imgbuffer, caption = NMdetails)
