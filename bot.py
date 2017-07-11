@@ -41,7 +41,7 @@ def link_handler_routine(bot, update):
 		NMhtml = bytes(response.read()).decode("utf-8")
 	except Exception as e:
 		send_async(bot, chat_id, text = u"无法连接到网易云")
-		error(bot, update, e.reason)
+		error(bot, update, "Connection failed")
 		return
 	# Downloaded from server, start extracting....
 	# Text info
@@ -53,14 +53,14 @@ def link_handler_routine(bot, update):
 		NMdetails = NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist + "\n\nhttp://music.163.com/song/" + NMsong
 		logger.info("Done: " + NMsong)
 	except Exception as e:
-		error(bot, update, e.reason)
-		send_async(bot, chat_id, e.reason)
+		error(bot, update, "Extraction failure?")
+		send_async(bot, chat_id, u"抓取失败")
 		return
 	# Album art
 	try:
 		NMalbumarturl = extract_albumarturl(NMhtml)
 	except Exception as e:
-		error(bot, update, u"无头音乐？")
+		error(bot, update, "Cannot download cover art")
 		send_async(bot, chat_id, text = NMdetails)
 		return
 	logger.debug("Downloading album art : " + NMalbumarturl)
@@ -69,7 +69,7 @@ def link_handler_routine(bot, update):
 		imgbuffer = BytesIO(response.read())
 	except Exception as e:
 		send_async(bot, chat_id, text = u"无法连接到网易云")
-		error(bot, update, e.reason)
+		error(bot, update, "Connection failed")
 		return
 	imgbuffer.name = "cover.png"
 	imgbuffer.seek(0)
