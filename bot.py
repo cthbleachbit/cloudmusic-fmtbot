@@ -15,6 +15,7 @@ from start_bot import start_bot
 from utils import send_async, send_photo_async, error, TIMEOUT
 from extract import *
 from shared_vars import updater, dispatcher
+import info_commands
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -75,6 +76,7 @@ def link_handler_routine(bot, update):
 	send_photo_async(bot, chat_id, photo = imgbuffer, caption = NMdetails)
 
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
+info_commands.register()
 
 start_bot(updater)
 updater.idle()
