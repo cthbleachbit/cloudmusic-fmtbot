@@ -33,7 +33,7 @@ def link_handler_routine(bot, update):
 		send_async(bot, chat_id, text = u"这啥？")
 		error(bot, update, "cannot find song id")
 		return
-	logger.debug("Parsed: " + NMsong)
+	logger.info("Parsed: " + NMsong)
 	# Start parsing
 	bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 	try:
@@ -51,7 +51,7 @@ def link_handler_routine(bot, update):
 		NMalbum = extract_info(NMhtml, "album")
 		NMartist = extract_info(NMhtml, "artist")
 		NMdetails = NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist + "\n\nhttp://music.163.com/song/" + NMsong
-		logger.debug("Done: " + NMsong)
+		logger.info("Done: " + NMsong)
 	except Exception as e:
 		error(bot, update, e.reason)
 		send_async(bot, chat_id, e.reason)
@@ -74,7 +74,7 @@ def link_handler_routine(bot, update):
 	imgbuffer.name = "cover.png"
 	imgbuffer.seek(0)
 	send_photo_async(bot, chat_id, photo = imgbuffer, caption = NMdetails)
-	logger.debug("Sent full details with image: " + NMsong)
+	logger.info("Sent full details with image: " + NMsong)
 
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
 info_commands.register()
