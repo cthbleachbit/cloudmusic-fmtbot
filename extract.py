@@ -3,6 +3,10 @@
 import logging
 import re
 
+def extract_songid(url):
+	NMsong = re.findall(r'https?://music.163.com/song/(\d+)', url) + re.findall(r'https?://music.163.com/#/song\?id=(\d+)', url)
+	return NMsong[0]
+
 def extract_info(html, infotype):
 	if infotype == "title":
 		return re.findall(r'<em class="f-ff2">(.+)</em>', html)[0]

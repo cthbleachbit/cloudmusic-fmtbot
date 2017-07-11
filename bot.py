@@ -12,7 +12,7 @@ from telegram.ext.dispatcher import run_async
 
 from start_bot import start_bot
 from utils import send_async, error, TIMEOUT
-from extract import extract_info
+from extract import extract_info, extract_songid
 from shared_vars import updater, dispatcher
 
 logging.basicConfig(
@@ -24,14 +24,22 @@ def link_handler_routine(bot, update):
 	"""Handler for links"""
 	chat_id = update.message.chat_id
 	print("Incoming: " + update.message.text)
-	# Start by looking for netease sharing addr
-	NMsong = re.findall(r'(http://music.163.com/song/\d+)', update.message.text)[0]
+	# Start by looking for netease sharing sond id
+	try:
+		NMsong = extract_songid(update.message.text)
+	except:
+		send_async(bot, chat_id, text = u"这啥？")
+		error(bot, update, "cannot find song id")
+		return
 	print("Parsed: " + NMsong)
+	# Start parsing
 	bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 	try:
-		response = urlopen(NMsong);
+		response = urlopen("http://music.163.com/song/" + NMsong);
 	except urllib.error.URLError as e:
-		error(e.reason)
+		send_async(bot, chat_id, text = u"无法连接到网易云")
+		error(bot, update, e.reason)
+		return
 	NMhtml = bytes(response.read()).decode("utf-8")
 	# Downloaded from server, start extracting
 	NMtitle = extract_info(NMhtml, "title")
@@ -41,7 +49,7 @@ def link_handler_routine(bot, update):
 	NMdetails=NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist
 	print("Done: " + NMdetails)
 	send_async(bot, chat_id, text = NMdetails)
-	
+
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
 
 start_bot(updater)
