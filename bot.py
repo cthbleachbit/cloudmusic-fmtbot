@@ -5,14 +5,15 @@ import re
 from urllib.parse import urlparse
 from urllib.request import urlopen
 from datetime import datetime
+from io import BytesIO
 
 from telegram import ParseMode, Message, Chat, ChatAction, MessageEntity
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram.ext.dispatcher import run_async
 
 from start_bot import start_bot
-from utils import send_async, error, TIMEOUT
-from extract import extract_info, extract_songid
+from utils import send_async, send_photo_async, error, TIMEOUT
+from extract import *
 from shared_vars import updater, dispatcher
 
 logging.basicConfig(
@@ -41,14 +42,27 @@ def link_handler_routine(bot, update):
 		error(bot, update, e.reason)
 		return
 	NMhtml = bytes(response.read()).decode("utf-8")
-	# Downloaded from server, start extracting
+	# Downloaded from server, start extracting....
+	# Text info
 	NMtitle = extract_info(NMhtml, "title")
 	NMsubtitle = extract_info(NMhtml, "subtitle")
 	NMalbum = extract_info(NMhtml, "album")
 	NMartist = extract_info(NMhtml, "artist")
-	NMdetails=NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist
+	NMdetails = NMtitle + "\n" + NMsubtitle + "\n" + NMalbum + "\n" + NMartist
 	print("Done: " + NMdetails)
-	send_async(bot, chat_id, text = NMdetails)
+	# Album art
+	NMalbumarturl = extract_albumarturl(NMhtml)
+	print("Downloading album art : " + NMalbumarturl)
+	try:
+		response = urlopen(NMalbumarturl)
+	except urllib.error.URLError as e:
+		send_async(bot, chat_id, text = u"无法连接到网易云")
+		error(bot, update, e.reason)
+		return
+	imgbuffer = BytesIO(response.read())
+	imgbuffer.name = "cover.png"
+	imgbuffer.seek(0)
+	send_photo_async(bot, chat_id, photo = imgbuffer, caption = NMdetails)
 
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
 

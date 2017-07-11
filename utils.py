@@ -32,6 +32,16 @@ def send_async(bot, *args, **kwargs):
     except Exception as e:
         error(None, None, e)
 
+@run_async
+def send_photo_async(bot, *args, **kwargs):
+    """Send a photo asynchronously"""
+    if 'timeout' not in kwargs:
+        kwargs['timeout'] = TIMEOUT
+
+    try:
+        bot.sendPhoto(*args, **kwargs)
+    except Exception as e:
+        error(None, None, e)
 
 @run_async
 def answer_async(bot, *args, **kwargs):
