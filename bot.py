@@ -26,14 +26,18 @@ def link_handler_routine(bot, update):
 	"""Handler for links"""
 	chat_id = update.message.chat_id
 	logger.debug("Incoming: " + update.message.text)
+	
 	# Start by looking for netease sharing sond id
 	try:
 		NMsong = extract_songid(update.message.text)
 	except:
-		send_async(bot, chat_id, text = u"这啥？")
-		error(bot, update, "cannot find song id")
+		if chat_id > 0:
+			send_async(bot, chat_id, text = u"这啥？")
+		error(bot, update, "Possibly not an valid link:")
+		error(bot, update, update.message.text)
 		return
 	logger.info("Parsed: " + NMsong)
+	
 	# Start parsing
 	bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
 	try:
@@ -43,6 +47,7 @@ def link_handler_routine(bot, update):
 		send_async(bot, chat_id, text = u"无法连接到网易云")
 		error(bot, update, "Connection failed")
 		return
+	
 	# Downloaded from server, start extracting....
 	# Text info
 	try:
@@ -56,14 +61,17 @@ def link_handler_routine(bot, update):
 		error(bot, update, "Extraction failure?")
 		send_async(bot, chat_id, u"抓取失败")
 		return
-	# Album art
+	
+	# To locate the url for album art
 	try:
 		NMalbumarturl = extract_albumarturl(NMhtml)
 	except Exception as e:
+		# If somehow there's no cover art, send a pure text message instead.
 		error(bot, update, "Cannot download cover art")
 		send_async(bot, chat_id, text = NMdetails)
 		return
-	logger.debug("Downloading album art : " + NMalbumarturl)
+	logger.info("Downloading album art : " + NMalbumarturl)
+	# Actually download the album art
 	try:
 		response = urlopen(NMalbumarturl)
 		imgbuffer = BytesIO(response.read())
@@ -80,4 +88,5 @@ dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEnti
 info_commands.register()
 
 start_bot(updater)
+logger.info("Bot started.")
 updater.idle()
