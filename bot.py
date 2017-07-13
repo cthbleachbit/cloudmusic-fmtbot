@@ -18,8 +18,8 @@ from shared_vars import updater, dispatcher
 import info_commands
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO)
+		format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+		level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def link_handler_routine(bot, update):
