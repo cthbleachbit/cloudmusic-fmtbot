@@ -8,7 +8,7 @@ def extract_songid(url):
 	return NMsongid[0]
 
 def extract_albumid(url):
-	NMalbumid = re.findall(r'https?://music.163.com/album/(\d+)', url) + re.findall(r'https?://music.163.com/#/album\?id=(\d+)', url)
+	NMalbumid = re.findall(r'https?://music.163.com/#?/?album/(\d+)', url) + re.findall(r'https?://music.163.com/#?/?album\?id=(\d+)', url)
 	return NMalbumid[0]
 
 def extract_info(html, infotype):
