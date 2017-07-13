@@ -4,7 +4,7 @@ import logging
 import re
 
 def extract_songid(url):
-	NMsongid = re.findall(r'https?://music.163.com/song/(\d+)', url) + re.findall(r'https?://music.163.com/#/song\?id=(\d+)', url)
+	NMsongid = re.findall(r'https?://music.163.com/#?/?song/(\d+)', url) + re.findall(r'https?://music.163.com/#?/?song\?id=(\d+)', url)
 	return NMsongid[0]
 
 def extract_albumid(url):
