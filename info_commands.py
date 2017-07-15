@@ -9,9 +9,14 @@ help_text = ("按照以下步骤\n\n"
 		"2. 发送给这个 bot\n"
 		"3. 得到有专辑封面的分享消息")
 
+# Handling /help and /start
 def help(bot, update):
-	"""Handler for the /help command"""
 	send_async(bot, update.message.chat_id, text=help_text,
+			parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+
+# Returns chat id
+def getcid(bot, update):
+	send_async(bot, update.message.chat_id, text=update.message.chat_id,
 			parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 def register():
