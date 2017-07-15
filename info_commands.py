@@ -12,13 +12,20 @@ help_text = ("按照以下步骤\n\n"
 # Handling /help and /start
 def help(bot, update):
 	send_async(bot, update.message.chat_id, text=help_text,
-			parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+			disable_web_page_preview=True)
 
 # Returns chat id
 def getcid(bot, update):
 	send_async(bot, update.message.chat_id, text=update.message.chat_id,
-			parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+			disable_web_page_preview=True)
+
+# Returns user id
+def getuid(bot, update):
+	send_async(bot, update.message.chat_id, text=update.message.from_user.id,
+			disable_web_page_preview=True)
 
 def register():
 	dispatcher.add_handler(CommandHandler('help', help))
 	dispatcher.add_handler(CommandHandler('start', help))
+	dispatcher.add_handler(CommandHandler('getcid', getcid))
+	dispatcher.add_handler(CommandHandler('getuid', getuid))
