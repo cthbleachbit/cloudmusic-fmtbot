@@ -33,10 +33,10 @@ def link_handler_routine(bot, update):
 	except Exception as e:
 		if chat_id > 0:
 			send_async(bot, chat_id, text = u"这啥？")
-		elif chat_id == "-1001140876026":
+		elif chat_id == -1001140876026:
 			send_async(bot, chat_id, text = u"yoyo 好看")
-		logger.info(bot, update, "Possibly not an valid link:")
-		logger.info(bot, update, update.message.text)
+		logger.info("Possibly not an valid link:")
+		logger.info(update.message.text)
 		return
 	logger.info("Parsed: " + NMsong)
 	
