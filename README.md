@@ -5,7 +5,7 @@ Netease Cloudmusic Telegram sharing formatting bot
 Netease Cloudmusic sharing generates __extra amount__ of junk text when sharing songs. This bot generates a photo message with album art and song info.
 
 # To run
-Store your Bot API token in `auth.py`
+Store your Bot API token in `auth.py`, install the whole bunch of dependencies for python 3 and run `bot.py`
 
 # Deps
 * python-telegram-bot
