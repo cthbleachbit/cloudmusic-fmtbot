@@ -14,7 +14,7 @@ from telegram.ext.dispatcher import run_async
 from start_bot import start_bot
 from utils import send_async, send_photo_async, error, TIMEOUT
 from extract import *
-from shared_vars import updater, dispatcher
+from shared_vars import *
 import info_commands
 
 logging.basicConfig(
@@ -33,8 +33,8 @@ def link_handler_routine(bot, update):
 	except Exception as e:
 		if chat_id > 0:
 			send_async(bot, chat_id, text = u"这啥？")
-		elif chat_id == -1001140876026:
-			send_async(bot, chat_id, text = u"yoyo 好看")
+		elif chat_id == special_group:
+			send_async(bot, chat_id, text = easter_egg_msg)
 		logger.info("Possibly not an valid link:")
 		logger.info(update.message.text)
 		return
