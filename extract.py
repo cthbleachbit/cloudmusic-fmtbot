@@ -4,11 +4,11 @@ import logging
 import re
 
 def extract_songid(url):
-	NMsongid = re.findall(r'https?://music.163.com/#?/?song/(\d+)', url) + re.findall(r'https?://music.163.com/#?/?song\?id=(\d+)', url)
+	NMsongid = re.findall(r'https?://music.163.com/#?/?m?/?song/(\d+)', url) + re.findall(r'https?://music.163.com/#?/?m?/?song\?id=(\d+)', url)
 	return NMsongid[0]
 
 def extract_albumid(url):
-	NMalbumid = re.findall(r'https?://music.163.com/#?/?album/(\d+)', url) + re.findall(r'https?://music.163.com/#?/?album\?id=(\d+)', url)
+	NMalbumid = re.findall(r'https?://music.163.com/#?/?m?/?album/(\d+)', url) + re.findall(r'https?://music.163.com/#?/?m?/?album\?id=(\d+)', url)
 	return NMalbumid[0]
 
 def extract_info(html, infotype):
