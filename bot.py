@@ -8,7 +8,7 @@ from datetime import datetime
 from io import BytesIO
 
 from telegram import ParseMode, Message, Chat, ChatAction, MessageEntity
-from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
+from telegram.ext import CommandHandler, MessageHandler, Filters
 from telegram.ext.dispatcher import run_async
 
 from start_bot import start_bot
@@ -89,6 +89,6 @@ def link_handler_routine(bot, update):
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
 info_commands.register()
 
-start_bot(updater)
+updater.start_polling()
 logger.info("Bot started.")
 updater.idle()
