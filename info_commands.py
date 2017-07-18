@@ -24,8 +24,18 @@ def getuid(bot, update):
 	send_async(bot, update.message.chat_id, text=update.message.from_user.id,
 			disable_web_page_preview=True)
 
+def version(bot, update):
+	p = subprocess.Popen("""bash -c 'printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"' """, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	lines = ""
+	for line in p.stdout.readlines():
+		lines = lines + line.decode('utf-8')
+	retval = p.wait()
+	send_async(bot, update.message.chat_id, text=lines,
+			disable_web_page_preview=True)
+
 def register():
 	dispatcher.add_handler(CommandHandler('help', help))
 	dispatcher.add_handler(CommandHandler('start', help))
 	dispatcher.add_handler(CommandHandler('getcid', getcid))
 	dispatcher.add_handler(CommandHandler('getuid', getuid))
+	dispatcher.add_handler(CommandHandler('version', version))
