@@ -1,3 +1,5 @@
+import subprocess
+
 from telegram import ParseMode
 from telegram.ext import CommandHandler
 
