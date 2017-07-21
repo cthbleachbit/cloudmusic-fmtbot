@@ -11,7 +11,6 @@ from telegram import ParseMode, Message, Chat, ChatAction, MessageEntity
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from telegram.ext.dispatcher import run_async
 
-from start_bot import start_bot
 from utils import send_async, send_photo_async, error, TIMEOUT
 from extract import *
 from shared_vars import *
