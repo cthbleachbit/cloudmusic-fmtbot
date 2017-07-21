@@ -23,7 +23,7 @@ def extract_info(html, infotype):
 	elif infotype == "album":
 		return re.findall(u'<p class="des s-fc4">所属专辑：<a href="/album\?id=\d+" class="s-fc7">(.+)</a>.*</p>', html)[0]
 	elif infotype == "artist":
-		return (re.findall(u'<p class="des s-fc4">歌手：<span title="(.+)"><a class="s-fc7" href="/artist\?id=\d+">.+</a></span></p>', html) + re.findall(u'<p class="des s-fc4">歌手：<span title="(.+)"><span class="s-fc7">.+</span></span></p>', html))[0]
+		return re.findall(u'<p class="des s-fc4">歌手：<span title="(.+)">', html)[0]
 
 def extract_albumarturl(html):
 	return re.findall(r'<img src=".+" class="j-img" data-src="(\S+)">', html)[0]
