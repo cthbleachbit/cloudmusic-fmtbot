@@ -84,6 +84,10 @@ def link_handler_routine(bot, update):
 	imgbuffer.seek(0)
 	send_photo_async(bot, chat_id, photo = imgbuffer, caption = NMdetails)
 	logger.info("Sent full details with image: " + NMsong)
+	# Also sends a copy to that channel
+	if (chat_id == special_group and special_channel != 0):
+		send_photo_async(bot, chat_id, photo = imgbuffer, caption = NMdetails)
+		logger.info("Also sent to: " + special_channel)
 
 dispatcher.add_handler(MessageHandler((Filters.text & Filters.entity(MessageEntity.URL)), link_handler_routine))
 info_commands.register()
