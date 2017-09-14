@@ -5,7 +5,6 @@
 
 import logging
 
-from telegram import Emoji
 from telegram.ext.dispatcher import run_async
 
 logger = logging.getLogger(__name__)
