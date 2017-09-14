@@ -32,7 +32,7 @@ def link_handler_routine(bot, update):
 	except Exception as e:
 		if chat_id > 0:
 			send_async(bot, chat_id, text = u"这啥？")
-		elif chat_id == special_group:
+		elif chat_id == special_group and easter_egg_msg != u"":
 			send_async(bot, chat_id, text = easter_egg_msg)
 		logger.info("Possibly not an valid link:")
 		logger.info(update.message.text)
